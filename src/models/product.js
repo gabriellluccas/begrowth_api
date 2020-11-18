@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 const uuid = require('uuid');
+const {Schema, model} = mongoose;
 
 const ProductSchema = new Schema({
   _id: {
@@ -26,4 +27,4 @@ const ProductSchema = new Schema({
   updated: {type: Date, default: Date.now},
 }, {_id: false});
 
-module.exports = mongoose.model('products', ProductSchema);
+module.exports = model('products', ProductSchema);
