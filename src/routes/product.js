@@ -22,6 +22,77 @@ const product = [
       }
     },
   },
+  {
+    _method: 'get',
+    _path: '/product',
+    _function: async (req, res) => {
+      try {
+        const result = await productService.findAll();
+        if (!result.length) return res.status(204).send();
+        return res.status(200).send({data: result});
+      } catch (error) {
+        console.error(error);
+        return res.status(500).send({error: 'internal error'});
+      }
+    },
+  },
+  {
+    _method: 'get',
+    _path: '/product/:id',
+    _function: async (req, res) => {
+      try {
+        const {id} = req.params;
+        const result = await productService.findById(id);
+        if (!(await productService.findById(id))) {
+          return res.status(400).send({error: 'invalid id'});
+        }
+        return res.status(200).send({data: result});
+      } catch (error) {
+        console.error(error);
+        return res.status(500).send({error: 'internal error'});
+      }
+    },
+  },
+  {
+    _method: 'patch',
+    _path: '/product/:id',
+    _function: async (req, res) => {
+      try {
+        const {name, price, imageUrl} = req.body;
+        const {id} = req.params;
+        const obj = {};
+
+        if (name) obj.name = name;
+        if (price) obj.price = price;
+        if (imageUrl) obj.imageUrl = imageUrl;
+        if (!(await productService.findById(id))) {
+          return res.status(400).send({error: 'invalid id'});
+        }
+        const result = await productService.findByIdAndUpdate(id, obj);
+        return res.status(200).send({data: result});
+      } catch (error) {
+        console.error(error);
+        return res.status(500).send({error: 'internal error'});
+      }
+    },
+  },
+  {
+    _method: 'delete',
+    _path: '/product/:id',
+    _function: async (req, res) => {
+      try {
+        const {id} = req.params;
+        if (!(await productService.findById(id))) {
+          return res.status(400).send({error: 'invalid id'});
+        }
+        const result = await productService.findByIdAndDelete(id);
+        return res.status(200).send({data: result});
+      } catch (error) {
+        console.error(error);
+        return res.status(500).send({error: 'internal error'});
+      }
+    },
+  },
 ];
 
 module.exports = product;
