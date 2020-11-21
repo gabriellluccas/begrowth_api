@@ -54,21 +54,21 @@ const product = [
     },
   },
   {
-    _method: 'patch',
+    _method: 'put',
     _path: '/product/:id',
     _function: async (req, res) => {
       try {
         const {name, price, imageUrl} = req.body;
         const {id} = req.params;
-        const obj = {};
 
-        if (name) obj.name = name;
-        if (price) obj.price = price;
-        if (imageUrl) obj.imageUrl = imageUrl;
-        if (!(await productService.findById(id))) {
-          return res.status(400).send({error: 'invalid id'});
-        }
-        const result = await productService.findByIdAndUpdate(id, obj);
+        const errors = [];
+        if (!name) errors.push('name is required');
+        if (!price) errors.push('price is required');
+        if (!imageUrl) errors.push('imageUrl is required');
+        if (errors.length) return res.status(400).send(errors);
+
+        const result = await productService
+            .findByIdAndUpdate(id, {name, price, imageUrl});
         return res.status(200).send({data: result});
       } catch (error) {
         console.error(error);

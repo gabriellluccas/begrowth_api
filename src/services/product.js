@@ -10,7 +10,7 @@ const product = {
 
   findByIdAndUpdate: (id, obj = {}) => {
     const options = {new: true, useFindAndModify: false};
-    const objToUpdate = {...obj, updated: Date.now()};
+    const objToUpdate = {...obj, image_url: obj.imageUrl, updated: Date.now()};
     return Product.findByIdAndUpdate(id, objToUpdate, options);
   },
 
