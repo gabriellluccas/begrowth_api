@@ -1,22 +1,19 @@
 const mongoose = require('mongoose');
 
 const open = () => {
-  let dbUri = 'mongodb://localhost:27017/begrowth';
   const {
-    DB_PORT,
-    DB_USER,
-    DB_PASS,
-    DB_NAME,
-    DB_LINK_NAME,
+    DB_PORT = '27017',
+    DB_USER = 'root',
+    DB_PASS = 'root',
+    DB_NAME = 'begrowth',
+    DB_LINK_NAME = 'mongo',
   } = process.env;
-  if (DB_PORT && DB_USER && DB_PASS && DB_NAME && DB_LINK_NAME) {
-    dbUri = `mongodb://${DB_USER}:${DB_PASS}@${DB_LINK_NAME}:${DB_PORT}/${DB_NAME}?authSource=admin`;
-  }
+  dbUri = `mongodb://${DB_USER}:${DB_PASS}@${DB_LINK_NAME}:${DB_PORT}/${DB_NAME}?authSource=admin`;
   mongoose.set('useCreateIndex', true);
-  return mongoose.connect(
-      dbUri,
-      {useNewUrlParser: true, useUnifiedTopology: true},
-  );
+  return mongoose.connect(dbUri, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+  });
 };
 const close = mongoose.disconnect;
 module.exports = {open, close};
